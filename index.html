@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peys App</title>
+    <link rel="stylesheet" href="styles.css"> 
+</head>
+<body>
+
+    <div class="background-blur">
+        <div class="container">
+            <h1>Peys App</h1>
+
+            <label for="sizeRange">Select Photo Size:</label>
+            <input type="range" id="sizeRange" min="10" max="100" step="10" value="10">
+            <span id="sizeValue">10</span><br><br>
+
+            <label for="borderColor">Select Photo Border:</label>
+            <input type="color" id="borderColor" value="#ff0000"><br><br>
+
+            <button id="processButton">Process</button><br><br>
+
+            <img id="photo" src="mypic.jpg" alt="My Picture" class="photo">
+
+        </div>
+    </div>
+
+    <script>
+        const sizeRange = document.getElementById('sizeRange');
+        const sizeValue = document.getElementById('sizeValue');
+        const borderColor = document.getElementById('borderColor');
+        const processButton = document.getElementById('processButton');
+        const photo = document.getElementById('photo');
+
+       
+        function updateStyles() {
+            const newBorderColor = borderColor.value;
+            let buttonColor, sliderColor;
+
+           
+            if (isLightColor(newBorderColor)) {
+                buttonColor = '#000000'; 
+                sliderColor = '#000000';
+            } else {
+                buttonColor = newBorderColor; 
+                sliderColor = newBorderColor;
+            }
+
+            
+            processButton.style.background = buttonColor;
+            sizeRange.style.background = sliderColor;
+
+            if (isLightColor(newBorderColor)) {
+                document.body.style.background = `linear-gradient(135deg, #ffffff 0%, #000000 100%)`;
+            } else {
+                document.body.style.background = `linear-gradient(135deg, ${newBorderColor} 0%, #f0f0f0 100%)`;
+            }
+            
+            
+            
+            
+        }
+
+       
+        function isLightColor(hex) {
+            const rgb = parseInt(hex.slice(1), 16); 
+            const r = (rgb >> 16) & 0xff;
+            const g = (rgb >>  8) & 0xff;
+            const b = (rgb >>  0) & 0xff;
+
+            
+            const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
+            return luminance > 186; 
+        }
+
+        sizeRange.addEventListener('input', function() {
+            sizeValue.textContent = sizeRange.value; 
+            updateStyles();
+        });
+
+        borderColor.addEventListener('input', function() {
+            updateStyles();
+        });
+
+        processButton.addEventListener('click', function() {
+            const newSize = sizeRange.value * 3; 
+            const newBorderColor = borderColor.value;
+
+            photo.style.width = newSize + 'px'; 
+            photo.style.border = `5px solid ${newBorderColor}`; 
+        });
+
+       
+        updateStyles();
+    </script>
+
+</body>
+</html>
